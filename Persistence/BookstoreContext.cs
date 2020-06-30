@@ -11,7 +11,7 @@ namespace BookstoreApi.Persistence
     public class BookstoreContext : DbContext
     {
         public BookstoreContext()
-            : base("name=BookstoreContext ")
+            : base("name=BookstoreContext")
         {
             this.Configuration.LazyLoadingEnabled = false;
         }

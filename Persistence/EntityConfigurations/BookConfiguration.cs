@@ -16,28 +16,28 @@ namespace BookstoreApi.Persistence.EntityConfigurations
                 .HasMaxLength(2000);
 
             Property(c => c.Name)
-                .IsRequired()
-                .HasMaxLength(255);
+            .IsRequired()
+            .HasMaxLength(255);
 
             HasRequired(c => c.PublishingHouse)
-                .WithMany(a => a.Books)
-                .HasForeignKey(c => c.PublishingHouseId)
-                .WillCascadeOnDelete(false);
+            .WithMany(a => a.Books)
+            .HasForeignKey(c => c.PublishingHouseId)
+            .WillCascadeOnDelete(false);
 
             HasRequired(c => c.Cover)
-                .WithRequiredDependent(c => c.Book);
-
-            HasRequired(c => c.Category)
                 .WithRequiredPrincipal(c => c.Book);
 
+            HasRequired(c => c.Category)
+                .WithRequiredDependent(c => c.Book);
+
             HasMany(c => c.Authors)
-                .WithMany(t => t.Books)
-                .Map(m =>
-                {
-                    m.ToTable("BookAuthors");
-                    m.MapLeftKey("BookId");
-                    m.MapRightKey("AuthorId");
-                });
+            .WithMany(t => t.Books)
+            .Map(m =>
+            {
+                m.ToTable("BookAuthors");
+                m.MapLeftKey("BookId");
+                m.MapRightKey("AuthorId");
+            });
         }
     }
 }
