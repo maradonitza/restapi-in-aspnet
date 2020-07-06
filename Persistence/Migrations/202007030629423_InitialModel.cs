@@ -20,17 +20,18 @@
                 "dbo.Books",
                 c => new
                     {
-                        Id = c.Int(nullable: false),
+                        Id = c.Int(nullable: false, identity: true),
                         Name = c.String(nullable: false, maxLength: 255),
                         Description = c.String(nullable: false, maxLength: 2000),
                         Price = c.Single(nullable: false),
                         PublishingHouseId = c.Int(nullable: false),
+                        CategoryId = c.Int(nullable: false),
                     })
                 .PrimaryKey(t => t.Id)
-                .ForeignKey("dbo.Categories", t => t.Id)
+                .ForeignKey("dbo.Categories", t => t.CategoryId, cascadeDelete: true)
                 .ForeignKey("dbo.PublishingHouses", t => t.PublishingHouseId)
-                .Index(t => t.Id)
-                .Index(t => t.PublishingHouseId);
+                .Index(t => t.PublishingHouseId)
+                .Index(t => t.CategoryId);
             
             CreateTable(
                 "dbo.Categories",
@@ -79,14 +80,14 @@
         {
             DropForeignKey("dbo.Books", "PublishingHouseId", "dbo.PublishingHouses");
             DropForeignKey("dbo.Covers", "Id", "dbo.Books");
-            DropForeignKey("dbo.Books", "Id", "dbo.Categories");
+            DropForeignKey("dbo.Books", "CategoryId", "dbo.Categories");
             DropForeignKey("dbo.BookAuthors", "AuthorId", "dbo.Authors");
             DropForeignKey("dbo.BookAuthors", "BookId", "dbo.Books");
             DropIndex("dbo.BookAuthors", new[] { "AuthorId" });
             DropIndex("dbo.BookAuthors", new[] { "BookId" });
             DropIndex("dbo.Covers", new[] { "Id" });
+            DropIndex("dbo.Books", new[] { "CategoryId" });
             DropIndex("dbo.Books", new[] { "PublishingHouseId" });
-            DropIndex("dbo.Books", new[] { "Id" });
             DropTable("dbo.BookAuthors");
             DropTable("dbo.PublishingHouses");
             DropTable("dbo.Covers");

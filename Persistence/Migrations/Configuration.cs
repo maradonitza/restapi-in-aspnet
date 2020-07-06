@@ -13,6 +13,7 @@
         public Configuration()
         {
             AutomaticMigrationsEnabled = false;
+            MigrationsDirectory = @"Persistence\Migrations";
         }
 
         protected override void Seed(BookstoreApi.Persistence.BookstoreContext context)
@@ -122,6 +123,7 @@
             foreach (var category in categories)
                 context.Categories.AddOrUpdate(c => c.Id, category);
 
+           context.Database.ExecuteSqlCommand("SET IDENTITY_INSERT [dbo].[Books] OFF");
 
             var books = new List<Book>()
             {
@@ -133,17 +135,19 @@
                     Category = categories[1],
                     Description = "The classic study of tomorrow",
                     Price = 50,
-                    PublishingHouseId = 4
+                    PublishingHouseId = 4,
+                    CategoryId = 3
                 },
                 new Book()
                 {
                     Id = 2,
-                    Name = "Impact of science of society",
-                    Authors = new Collection<Author>() { authors[1] },
+                    Name = "Impact of science on society",
+                    Authors = new Collection<Author>() { authors[0] },
                     Category = categories[3],
                     Description = "In this concise and luminous book, the winner of the 1950 Nobel Prize for Literature and perhaps the outstanding philosopher of our time - regarded by many educators, scholars and critics as the most original English thinker since David Hume - examines the changes in modern life brought about by science. He suggests that its work in transforming society is only just beginning,,, He shows that science now offeres the possibility of far greater well-being for humanity than it has ever known before..., In his final chapter the suthor faces the fundamental question of our time: can a scientific society be stable? He groups the possible causes of instability under three heads: physical, biological, and psychological. - excerpts from book's synopsis",
                     Price = 100,
-                    PublishingHouseId = 5
+                    PublishingHouseId = 5,
+                    CategoryId = 3
                 },
                 new Book()
                 {
@@ -153,12 +157,15 @@
                     Category = categories[2],
                     Description = "This is the story, based on fact, of a boy who couldn't speak until the age of seven. Now twenty, he describes the events of his life.",
                     Price = 55,
-                    PublishingHouseId = 3
+                    PublishingHouseId = 3,
+                    CategoryId = 2
                 }
             };
 
             foreach (var book in books)
                 context.Books.AddOrUpdate(b => b.Id, book);
+
+            context.Database.ExecuteSqlCommand("SET IDENTITY_INSERT [dbo].[Books] ON");
 
 
             //  This method will be called after migrating to the latest version.

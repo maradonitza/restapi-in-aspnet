@@ -1,3 +1,4 @@
+using BookstoreApi.App_Start;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,6 +12,8 @@ namespace BookstoreApi
     {
         protected void Application_Start()
         {
+            UnityConfig.RegisterComponents();
+            AutoMapperProfile.Run();
             GlobalConfiguration.Configure(WebApiConfig.Register);
         }
     }

@@ -13,7 +13,7 @@ namespace BookstoreApi.Migrations
         
         string IMigrationMetadata.Id
         {
-            get { return "202006300751277_InitialModel"; }
+            get { return "202007021244116_InitialModel"; }
         }
         
         string IMigrationMetadata.Source

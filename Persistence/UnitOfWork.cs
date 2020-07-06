@@ -1,10 +1,6 @@
 ﻿using BookstoreApi.Core;
 using BookstoreApi.Core.Repositories;
 using BookstoreApi.Persistence.Repositories;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 
 namespace BookstoreApi.Persistence
 {

@@ -22,7 +22,10 @@ namespace BookstoreApi.Core.Domain
         public int PublishingHouseId { get; set; }
 
         public virtual ICollection<Author> Authors { get; set; }
-        public Category Category { get; set; }
+
+        public virtual Category Category { get; set; }
+
+        public int CategoryId { get; set; }
 
         public Cover Cover { get; set; }
 

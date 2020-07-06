@@ -1,9 +1,6 @@
 ﻿using BookstoreApi.Core.Domain;
-using System;
-using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Data.Entity.ModelConfiguration;
-using System.Linq;
-using System.Web;
 
 namespace BookstoreApi.Persistence.EntityConfigurations
 {
@@ -11,13 +8,20 @@ namespace BookstoreApi.Persistence.EntityConfigurations
     {
         public BookConfiguration()
         {
+
+            HasKey(b => b.Id);
+
+            Property(b => b.Id)
+                .HasDatabaseGeneratedOption(DatabaseGeneratedOption.Identity);
+
+
             Property(c => c.Description)
                 .IsRequired()
                 .HasMaxLength(2000);
 
             Property(c => c.Name)
-            .IsRequired()
-            .HasMaxLength(255);
+                .IsRequired()
+                .HasMaxLength(255);
 
             HasRequired(c => c.PublishingHouse)
             .WithMany(a => a.Books)
@@ -26,9 +30,6 @@ namespace BookstoreApi.Persistence.EntityConfigurations
 
             HasRequired(c => c.Cover)
                 .WithRequiredPrincipal(c => c.Book);
-
-            HasRequired(c => c.Category)
-                .WithRequiredDependent(c => c.Book);
 
             HasMany(c => c.Authors)
             .WithMany(t => t.Books)

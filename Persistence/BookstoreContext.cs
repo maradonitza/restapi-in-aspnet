@@ -1,10 +1,6 @@
 ﻿using BookstoreApi.Core.Domain;
 using BookstoreApi.Persistence.EntityConfigurations;
-using System;
-using System.Collections.Generic;
 using System.Data.Entity;
-using System.Linq;
-using System.Web;
 
 namespace BookstoreApi.Persistence
 {
@@ -24,6 +20,7 @@ namespace BookstoreApi.Persistence
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             modelBuilder.Configurations.Add(new BookConfiguration());
+            modelBuilder.Configurations.Add(new CategoryConfiguration());
         }
     }
 }
