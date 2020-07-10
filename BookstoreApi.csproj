@@ -130,6 +130,10 @@
     <Compile Include="Persistence\Migrations\202007030629423_InitialModel.designer.cs">
       <DependentUpon>202007030629423_InitialModel.cs</DependentUpon>
     </Compile>
+    <Compile Include="Persistence\Migrations\202007092203044_AddPublishedDateColumnToBooksTable.cs" />
+    <Compile Include="Persistence\Migrations\202007092203044_AddPublishedDateColumnToBooksTable.designer.cs">
+      <DependentUpon>202007092203044_AddPublishedDateColumnToBooksTable.cs</DependentUpon>
+    </Compile>
     <Compile Include="Persistence\Migrations\Configuration.cs" />
     <Compile Include="Persistence\BookstoreContext.cs" />
     <Compile Include="Persistence\EntityConfigurations\BookConfiguration.cs" />
@@ -154,6 +158,9 @@
   <ItemGroup>
     <EmbeddedResource Include="Persistence\Migrations\202007030629423_InitialModel.resx">
       <DependentUpon>202007030629423_InitialModel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Persistence\Migrations\202007092203044_AddPublishedDateColumnToBooksTable.resx">
+      <DependentUpon>202007092203044_AddPublishedDateColumnToBooksTable.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

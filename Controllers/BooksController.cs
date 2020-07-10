@@ -5,6 +5,7 @@ using BookstoreApi.Core.DTO;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Web.Http;
 
 namespace BookstoreApi.Controllers
@@ -19,38 +20,44 @@ namespace BookstoreApi.Controllers
         }
 
         // GET: api/books
-        public IEnumerable<BookReadDto> Get()
+        public IHttpActionResult Get()
         {
             var books = _unitOfWork.Books.GetBooksWithAuthors(1, 10);
-            return Mapper.Map<IEnumerable<Book>, IEnumerable<BookReadDto>>(books);
+            var mappedBooks = Mapper.Map<IEnumerable<Book>, IEnumerable<BookReadDto>>(books);
+            return Ok(mappedBooks);
+            //return BadRequest();
+            //return NotFound();
+            // return StatusCode(HttpStatusCode.GatewayTimeout)
         }
 
         // GET: api/books/5
-        public BookReadDto Get(int id)
+        public IHttpActionResult Get(int id)
         {
             var book = _unitOfWork.Books.GetBooksWithAuthors(1, 10).Where(b => b.Id == id).FirstOrDefault();
 
             if (book != null)
             {
-                return Mapper.Map<Book, BookReadDto>(book);
+                var mappedBook = Mapper.Map<Book, BookReadDto>(book);
+                return Ok(mappedBook);
             }
             else
             {
-                throw new Exception("Book not found");
+                return NotFound();
             }
         }
 
         // POST: api/books
-        public void Post([FromBody] BookUpdateDto book)
+        public IHttpActionResult Post([FromBody] BookUpdateDto book)
         {
             var bookToInsert = Mapper.Map<Book>(book);
             _unitOfWork.Books.Add(bookToInsert);
             _unitOfWork.Complete();
+            return StatusCode(HttpStatusCode.Created);
         }
 
 
         // PUT: api/books/5
-        public void Put(int id, [FromBody] BookUpdateDto bookUpdateDto)
+        public IHttpActionResult Put(int id, [FromBody] BookUpdateDto bookUpdateDto)
         {
             var existingBook = _unitOfWork.Books.Find(b => b.Id == id).FirstOrDefault<Book>();
 
@@ -58,21 +65,25 @@ namespace BookstoreApi.Controllers
             {
                 Mapper.Map(bookUpdateDto, existingBook);
                 _unitOfWork.Complete();
+                return Ok("Record updated successfully");
+            } else
+            {
+                return BadRequest("No record found against ID "+id);
             }
         }
 
         // DELETE: api/books/5
-        public void Delete(int id)
+        public IHttpActionResult Delete(int id)
         {
             var book = _unitOfWork.Books.Find(b => b.Id == id).FirstOrDefault();
 
             if (book != null)
             {
                 _unitOfWork.Books.Remove(book);
+                _unitOfWork.Complete();
+                return Ok("Book deleted");
             }
-            _unitOfWork.Complete();
+            return NotFound();
         }
-
-
     }
 }
