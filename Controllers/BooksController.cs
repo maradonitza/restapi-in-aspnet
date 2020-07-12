@@ -13,27 +13,40 @@ namespace BookstoreApi.Controllers
     public class BooksController : ApiController
     {
         private readonly IUnitOfWork _unitOfWork;
-        
+
         public BooksController(IUnitOfWork unitOfWork)
         {
             _unitOfWork = unitOfWork;
         }
 
         // GET: api/books
-        public IHttpActionResult Get()
+        [HttpGet]
+        public IHttpActionResult GetBooks([FromUri] string sort = "")
         {
-            var books = _unitOfWork.Books.GetBooksWithAuthors(1, 10);
+            var books = _unitOfWork.Books.GetBooksWithAuthors(1, 10, sort);
+
             var mappedBooks = Mapper.Map<IEnumerable<Book>, IEnumerable<BookReadDto>>(books);
             return Ok(mappedBooks);
-            //return BadRequest();
-            //return NotFound();
-            // return StatusCode(HttpStatusCode.GatewayTimeout)
+        }
+
+        // GET: api/books/paging
+        [HttpGet]
+        [Route("api/books/paging/{pageNumber=}/{pageSize=}/{sort=}")]
+        // [Route("api/books/paging")]
+        public IHttpActionResult GetBooksWithCustomPaging([FromUri] int pageNumber = 1, [FromUri] int pageSize = 10, [FromUri] string sort = "")
+        {
+            var books = _unitOfWork.Books.GetBooksWithAuthors(pageNumber, pageSize, sort);
+
+            var mappedBooks = Mapper.Map<IEnumerable<Book>, IEnumerable<BookReadDto>>(books);
+            return Ok(mappedBooks);
         }
 
         // GET: api/books/5
-        public IHttpActionResult Get(int id)
+        [HttpGet]
+        [Route("api/Books/{id}")]
+        public IHttpActionResult LoadBook(int id)
         {
-            var book = _unitOfWork.Books.GetBooksWithAuthors(1, 10).Where(b => b.Id == id).FirstOrDefault();
+            var book = _unitOfWork.Books.GetAll().Where(b => b.Id == id).FirstOrDefault();
 
             if (book != null)
             {
@@ -46,10 +59,22 @@ namespace BookstoreApi.Controllers
             }
         }
 
+        //[HttpGet]
+        //[Route("api/Books/Test/{id}")]
+        //public int Test(int id)
+        //{
+        //    return id;
+        //}
+
         // POST: api/books
         public IHttpActionResult Post([FromBody] BookUpdateDto book)
         {
             var bookToInsert = Mapper.Map<Book>(book);
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            
             _unitOfWork.Books.Add(bookToInsert);
             _unitOfWork.Complete();
             return StatusCode(HttpStatusCode.Created);
@@ -66,9 +91,10 @@ namespace BookstoreApi.Controllers
                 Mapper.Map(bookUpdateDto, existingBook);
                 _unitOfWork.Complete();
                 return Ok("Record updated successfully");
-            } else
+            }
+            else
             {
-                return BadRequest("No record found against ID "+id);
+                return BadRequest("No record found against ID " + id);
             }
         }
 

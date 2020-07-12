@@ -20,11 +20,22 @@ namespace BookstoreApi.Persistence.Repositories
             return BookstoreContext.Books.OrderByDescending(c => c.Price).Take(count).ToList();
         }
 
-        public IEnumerable<Book> GetBooksWithAuthors(int pageIndex, int pageSize = 10)
+        public IEnumerable<Book> GetBooksWithAuthors(int pageIndex, int pageSize, string sort = "asc")
         {
-            return BookstoreContext.Books
-                .Include(c => c.Authors)
-                .OrderBy(c => c.Name)
+            var books = BookstoreContext.Books
+                .Include(c => c.Authors);
+                
+            switch (sort) {
+                case "desc":
+                    books = books.OrderByDescending(b => b.Price);
+                    break;
+                case "asc":
+                default:
+                    books = books.OrderBy(b => b.Price);
+                    break;
+            }
+
+            return books
                 .Skip((pageIndex - 1) * pageSize)
                 .Take(pageSize)
                 .ToList();
